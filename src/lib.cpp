@@ -3,8 +3,6 @@
 ///Private functions
 void Game::initVariables()
 {
-    this->window = nullptr;
-
     ///Game logic
     this->start = false;
     this->endGame = false;
@@ -17,25 +15,11 @@ void Game::initVariables()
     this->mouseHeld = false;
 }
 
-void Game::initWindow()
-{
-    /**
-       @return void
-        Init Window.
-        -Standard window size - 1600*900.
-        -Framerate Limit - 60.
-    */
-    this->videoMode = sf::VideoMode(1600, 900);
-
-    this->window = new sf::RenderWindow(this->videoMode, "Re: training", sf::Style::Titlebar | sf::Style::Close);
-
-    this->window->setFramerateLimit(60);
-}
 
 ///Font connection
 void Game::initFonts()
 {
-    if (this->font.loadFromFile("C:/Users/msi-pc/CLionProjects/Re-training/assets/fonts/Dosis-Light.ttf"))
+    if (!this->font.loadFromFile("C:/Users/msi-pc/CLionProjects/Re-training/assets/fonts/Dosis-Light.ttf"))
     {
         std::cout << "ERROR::GAME::INITFONTS::Failed to load font!" << "\n";
     }
@@ -69,27 +53,10 @@ void Game::initMap()
     this->mapBackground.setTexture(this->mapBackgroundTex);
 }
 
-///Constructors / Destructors
-Game::Game()
-{
-    this->initVariables();
-    this->initWindow();
-    this->initFonts();
-    this->initText();
-    this->initEnemies();
-    this->initMap();
-}
-
-///Constructors / Destructors
-Game::~Game()
-{
-    delete this->window;
-}
-
 ///Accessors
 const bool Game::running() const
 {
-    return this->window->isOpen();
+    return this->window.isOpen();
 }
 
 const bool Game::getEndGame() const
@@ -112,7 +79,7 @@ void Game::spawnCircle()
 
 
     this->enemy.setPosition(
-            static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - this->enemy.getSize().x)),
+            static_cast<float>(rand() % static_cast<int>(this->window.getSize().x - this->enemy.getSize().x)),
             0.f
     );
 
@@ -150,16 +117,16 @@ void Game::spawnCircle()
 void Game::pollEvents()
 {
     ///Event polling
-    while (this->window->pollEvent(this->ev))
+    while (this->window.pollEvent(this->ev))
     {
         switch (this->ev.type)
         {
             case sf::Event::Closed:
-                this->window->close();
+                this->window.close();
                 break;
             case sf::Event::KeyPressed:
                 if (this->ev.key.code == sf::Keyboard::Escape)
-                    this->window->close();
+                    this->window.close();
                 break;
         }
     }
@@ -174,8 +141,8 @@ void Game::updateMousePositions()
         - Mouse position relative to window (Vector2i)
     */
 
-    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-    this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
+    this->mousePosWindow = sf::Mouse::getPosition(this->window);
+    this->mousePosView = this->window.mapPixelToCoords(this->mousePosWindow);
 }
 
 ///rendering points
@@ -220,7 +187,7 @@ void Game::updateEnemies()
         ///Moving enemy lower
         this->enemies[i].move(0.f, 5.f);
         ///Check out of window
-        if (this->enemies[i].getPosition().y > this->window->getSize().y)
+        if (this->enemies[i].getPosition().y > this->window.getSize().y)
         {
             this->enemies.erase(this->enemies.begin() + i);
             this->health -= 1;
@@ -297,7 +264,7 @@ void Game::renderEnemies(sf::RenderTarget& target)
 
 void Game::renderMap()
 {
-    this->window->draw(this->mapBackground);
+    this->window.draw(this->mapBackground);
 }
 
 void Game::renderMenu()
@@ -319,8 +286,8 @@ void Game::renderMenu()
     this->gameOverText.setFillColor(sf::Color::Red);
     this->gameOverText.setString("Game Over!");
     this->gameOverText.setPosition(
-            this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
-            this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
+            this->window.getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
+            this->window.getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
 
     ///Сonnecting textures
     sf::Texture menuTexture1, menuTexture2, menuTexture3, aboutTexture, menuBackground;
@@ -339,22 +306,22 @@ void Game::renderMenu()
     menu2.setColor(sf::Color::White);
     menu3.setColor(sf::Color::White);
     menuNum = 0;
-    this->window->clear(sf::Color(129, 181, 221));
-    if (sf::IntRect(100, 30, 300, 50).contains(sf::Mouse::getPosition(*this->window))) { menu1.setColor(sf::Color::Blue); menuNum = 1; }
-    if (sf::IntRect(100, 90, 300, 50).contains(sf::Mouse::getPosition(*this->window))) { menu2.setColor(sf::Color::Blue); menuNum = 2; }
-    if (sf::IntRect(100, 150, 300, 50).contains(sf::Mouse::getPosition(*this->window))) { menu3.setColor(sf::Color::Blue); menuNum = 3; }
+    this->window.clear(sf::Color(129, 181, 221));
+    if (sf::IntRect(100, 30, 300, 50).contains(sf::Mouse::getPosition(this->window))) { menu1.setColor(sf::Color::Blue); menuNum = 1; }
+    if (sf::IntRect(100, 90, 300, 50).contains(sf::Mouse::getPosition(this->window))) { menu2.setColor(sf::Color::Blue); menuNum = 2; }
+    if (sf::IntRect(100, 150, 300, 50).contains(sf::Mouse::getPosition(this->window))) { menu3.setColor(sf::Color::Blue); menuNum = 3; }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         if (menuNum == 1) { isMenu = false; start = true;}//если нажали первую кнопку, то выходим из меню и играем
-        if (menuNum == 2) { this->window->draw(about); }
-        if (menuNum == 3)  { isMenu = false; this->window->close(); }
+        if (menuNum == 2) { this->window.draw(about); }
+        if (menuNum == 3)  { isMenu = false; this->window.close(); }
     }
 
     ///rendering of menu items
-    this->window->draw(menuBg);
-    this->window->draw(menu1);
-    this->window->draw(menu2);
-    this->window->draw(menu3);
+    this->window.draw(menuBg);
+    this->window.draw(menu1);
+    this->window.draw(menu2);
+    this->window.draw(menu3);
 }
 
 void Game::render()
@@ -369,7 +336,7 @@ void Game::render()
         Renders the game objects.
     */
 
-    this->window->clear();
+    this->window.clear();
 
     ///Menu rendering
     if (this->isMenu) {
@@ -381,15 +348,15 @@ void Game::render()
         this->renderMap();
 
         ///Draw game objects
-        this->renderEnemies(*this->window);
-        this->renderText(*this->window);
+        this->renderEnemies(this->window);
+        this->renderText(this->window);
     }
 
     ///Game over screen
     if (this->health <= 0)
     {
-        this->window->draw(this->gameOverText);
+        this->window.draw(this->gameOverText);
     }
 
-    this->window->display();
+    this->window.display();
 }

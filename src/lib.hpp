@@ -25,9 +25,12 @@ class Game
 private:
     ///Variables
     ///Window and menu
-    sf::RenderWindow* window;
     sf::VideoMode videoMode;
-    sf::Event ev;
+    sf::RenderWindow window;
+
+
+
+    sf::Event ev{};
     sf::Text gameOverText;
     sf::Text pointText;
 
@@ -47,15 +50,15 @@ private:
     sf::Text uiText;
 
     ///Game logic
-    bool endGame;
-    bool start;
-    bool isMenu;
-    unsigned points;
-    int health;
-    float enemySpawnTimer;
-    float enemySpawnTimerMax;
-    int maxEnemies;
-    bool mouseHeld;
+    bool endGame{};
+    bool start{};
+    bool isMenu{};
+    unsigned points{};
+    int health{};
+    float enemySpawnTimer{};
+    float enemySpawnTimerMax{};
+    int maxEnemies{};
+    bool mouseHeld{};
 
     ///Game objects
     std::vector<sf::RectangleShape> enemies;
@@ -63,7 +66,6 @@ private:
 
     ///Private functions
     void initVariables();
-    void initWindow();
     void initFonts();
     void initText();
     void initEnemies();
@@ -71,8 +73,15 @@ private:
 
 public:
     ///Constructors / Destructors
-    Game();
-    virtual ~Game();
+    Game() : videoMode(1600, 900), window(videoMode, "Re: training", sf::Style::Titlebar | sf::Style::Close)
+    {
+        window.setFramerateLimit(60);
+        initVariables();
+        initFonts();
+        initText();
+        initEnemies();
+        initMap();
+    }
 
     ///Accessors
     const bool running() const;
@@ -97,8 +106,8 @@ public:
 
     ///tests
     auto testSpawn();
-    auto testUpdateE();
-    auto testE();
+    auto testUpdateE() const;
+    auto testE() const;
 };
 
 ///Class that cuts the image into animation
