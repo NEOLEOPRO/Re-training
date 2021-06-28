@@ -105,9 +105,9 @@ public:
     void render();
 
     ///tests
-    unsigned __int64 testSpawn();
-    int testUpdateE() const;
-    bool testE() const;
+    bool EndGame() const;
+    int Health() const;
+    unsigned __int64 EnemyQty();
 };
 
 ///Class that cuts the image into animation

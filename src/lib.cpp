@@ -362,17 +362,17 @@ void Game::render()
 }
 
 ///создано для того чтобы извлечь часные переменные
-unsigned __int64 Game::testSpawn()
+unsigned __int64 Game::EnemyQty()
 {
     return enemies.size();
 }
 
-int Game::testUpdateE() const
+int Game::Health() const
 {
     return health;
 }
 
-bool Game::testE() const
+bool Game::EndGame() const
 {
     return endGame;
 }
