@@ -17,9 +17,14 @@ void Game::initVariables()
     this->mouseHeld = false;
 }
 
-///Window setting
 void Game::initWindow()
 {
+    /**
+       @return void
+        Init Window.
+        -Standard window size - 1600*900.
+        -Framerate Limit - 60.
+    */
     this->videoMode = sf::VideoMode(1600, 900);
 
     this->window = new sf::RenderWindow(this->videoMode, "Re: training", sf::Style::Titlebar | sf::Style::Close);
@@ -75,6 +80,7 @@ Game::Game()
     this->initMap();
 }
 
+///Constructors / Destructors
 Game::~Game()
 {
     delete this->window;
@@ -172,6 +178,7 @@ void Game::updateMousePositions()
     this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
 }
 
+///rendering points
 void Game::updateText()
 {
     std::stringstream ss;
@@ -210,9 +217,9 @@ void Game::updateEnemies()
     for (int i = 0; i < this->enemies.size(); i++)
     {
         bool deleted = false;
-
+        ///Moving enemy lower
         this->enemies[i].move(0.f, 5.f);
-
+        ///Check out of window
         if (this->enemies[i].getPosition().y > this->window->getSize().y)
         {
             this->enemies.erase(this->enemies.begin() + i);
@@ -273,6 +280,7 @@ void Game::update()
         this->endGame = true;
 }
 
+///rendering points
 void Game::renderText(sf::RenderTarget& target)
 {
     target.draw(this->uiText);
@@ -314,6 +322,7 @@ void Game::renderMenu()
             this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
             this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
 
+    ///Сonnecting textures
     sf::Texture menuTexture1, menuTexture2, menuTexture3, aboutTexture, menuBackground;
     menuTexture1.loadFromFile(R"(C:\Users\msi-pc\CLionProjects\Re-training\assets\images\menuwhite.png)", sf::IntRect (0, 0, 300, 50));
     menuTexture2.loadFromFile(R"(C:\Users\msi-pc\CLionProjects\Re-training\assets\images\menuwhite.png)", sf::IntRect (0, 50, 300, 50));
@@ -326,7 +335,6 @@ void Game::renderMenu()
     menu2.setPosition(100, 90);
     menu3.setPosition(100, 150);
     menuBg.setPosition(0, 0);
-
     menu1.setColor(sf::Color::White);
     menu2.setColor(sf::Color::White);
     menu3.setColor(sf::Color::White);
@@ -342,6 +350,7 @@ void Game::renderMenu()
         if (menuNum == 3)  { isMenu = false; this->window->close(); }
     }
 
+    ///rendering of menu items
     this->window->draw(menuBg);
     this->window->draw(menu1);
     this->window->draw(menu2);
@@ -362,6 +371,7 @@ void Game::render()
 
     this->window->clear();
 
+    ///Menu rendering
     if (this->isMenu) {
         this->renderMenu();
     }

@@ -80,22 +80,28 @@ public:
 
     ///Functions
     void spawnCircle();
-
     void pollEvents();
+
+    ///changing parameters
     void updateMousePositions();
     void updateText();
     void updateEnemies();
     void update();
 
+    ///rendering
     void renderText(sf::RenderTarget& target);
     void renderEnemies(sf::RenderTarget& target);
     void renderMap();
     void renderMenu();
-
     void render();
+
+    ///tests
+    auto testSpawn();
+    auto testUpdateE();
+    auto testE();
 };
 
-///Animation class: Animation sRock_small(sf::Texture &t, int x, int y, int w, int h, int count, float Speed)
+///Class that cuts the image into animation
 class Animation
 {
 public:
@@ -104,6 +110,15 @@ public:
     std::vector<sf::IntRect> frames;
 
     Animation(){}
+    /**
+     \param t - loaded animation-image(2 or more sprites)
+     \param x - top left corner of image
+     \param y - top left corner of image
+     \param w - weight
+     \param h - height
+     \param count - number of pieces
+     \param Speed - speed
+    */
 
     Animation (sf::Texture &t, int x, int y, int w, int h, int count, float Speed)
     {
@@ -118,7 +133,7 @@ public:
         sprite.setTextureRect(frames[0]);
     }
 
-
+    ///goes to the next piece
     void update()
     {
         Frame += speed;
@@ -127,6 +142,7 @@ public:
         if (n>0) sprite.setTextureRect( frames[int(Frame)] );
     }
 
+    ///End or not
     bool isEnd()
     {
         return Frame+speed>=frames.size();
