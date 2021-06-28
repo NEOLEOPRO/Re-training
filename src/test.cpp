@@ -1,23 +1,6 @@
 #include "catch.hpp"
 #include "lib.hpp"
 
-///создано для того чтобы извлечь часные переменные
-auto Game::testSpawn()
-{
-    return enemies.size();
-}
-
-///создано для того чтобы извлечь часные переменные
-auto Game::testUpdateE() const
-{
-    return health;
-}
-
-auto Game::testE() const
-{
-    return endGame;
-}
-
 ///проверка того что цели появляются
 TEST_CASE("Spawn enemy tests") {
     Game g;

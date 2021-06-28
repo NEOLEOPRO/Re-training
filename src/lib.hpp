@@ -105,9 +105,9 @@ public:
     void render();
 
     ///tests
-    auto testSpawn();
-    auto testUpdateE() const;
-    auto testE() const;
+    unsigned __int64 testSpawn();
+    int testUpdateE() const;
+    bool testE() const;
 };
 
 ///Class that cuts the image into animation

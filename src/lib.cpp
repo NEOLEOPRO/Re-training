@@ -360,3 +360,19 @@ void Game::render()
 
     this->window.display();
 }
+
+///создано для того чтобы извлечь часные переменные
+unsigned __int64 Game::testSpawn()
+{
+    return enemies.size();
+}
+
+int Game::testUpdateE() const
+{
+    return health;
+}
+
+bool Game::testE() const
+{
+    return endGame;
+}
